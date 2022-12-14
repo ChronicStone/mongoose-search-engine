@@ -724,13 +724,7 @@ export class SearchService {
         },
       )
 
-      // We added 'testCenter' and 'customer' fields here.
-      // If they are not existing, mongodb will substitute testCenter and
-      // customer fields value with 'null' and this is ok for us
-      fields = fields.concat(references, filterFields, [
-        "testCenter",
-        "customer",
-      ])
+      fields = fields.concat(references, filterFields)
       const project = fields.reduce((o, field) => ({ ...o, [field]: 1 }), {})
       return [
         {
