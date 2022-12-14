@@ -1,3 +1,7 @@
+import { AggregatePaginateModel, Document } from "mongoose"
+
+export type SearchPaginateModel<T extends Document> = AggregatePaginateModel<T>
+
 export enum MatchMode {
   contains = "contains",
   arrayContains = "arrayContains",
