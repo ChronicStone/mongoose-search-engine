@@ -1,6 +1,6 @@
 {
   "name": "@chronicstone/mongoose-search",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A mongoose advance search / filtering / pagination engine that leverages aggregation framework",
   "publishConfig": {
     "access": "public"
