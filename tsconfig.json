@@ -1,29 +1,28 @@
+
+
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "esnext",
-    "strict": true,
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "noUnusedLocals": true,
-    "noImplicitAny": true,
-    "allowJs": true,
-    "noEmit": true,
-    "outDir": "dist",
-    "resolveJsonModule": true,
-    "experimentalDecorators": true,
-    "incremental": true,
-    "strictNullChecks": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
+    "module": "commonjs",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "sourceMap": true,
-    "typeRoots": ["./src/types", "./node_modules/@types"]
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "incremental": true,
+    "noImplicitAny": false,
+    "noLib": false,
+    "target": "es6",
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "#lib": [
+        "lib"
+      ],
+    }
   }
 }
-

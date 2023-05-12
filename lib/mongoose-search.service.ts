@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger } from "@nestjs/common"
 import mongoose, { AggregatePaginateModel } from "mongoose"
-import { pipeMergeObject } from "./utils"
+import { pipeMergeObject } from "./common/utils"
 import {
   AdditionalCondition,
   AdditionalPostCondition,
@@ -10,10 +10,10 @@ import {
   PaginationOptions,
   Query,
   PaginatedQuery,
-} from "./types"
+} from "./common/types"
 
 @Injectable()
-export class SearchService {
+export class MongooseSearchService {
   /**
    * create mongoose filters from request query
    * @param query
@@ -185,7 +185,7 @@ export class SearchService {
       },
       ...(ignoreSort ? [] : this.createSortStage(paginatedQuery)),
     ]
-    const project = SearchService.project(paginatedQuery, aggregation)
+    const project = MongooseSearchService.project(paginatedQuery, aggregation)
     return project.concat(aggregation)
   }
 
@@ -578,7 +578,7 @@ export class SearchService {
     fieldPath: string = null,
     isArray = false,
   ) {
-    return SearchService.lookupWithNestedPipeline(
+    return MongooseSearchService.lookupWithNestedPipeline(
       from,
       localField,
       foreignField,
@@ -614,7 +614,7 @@ export class SearchService {
     if (!query?.select)
       // we don't have select fields specified
       // extract all fields
-      return SearchService.createLookup(
+      return MongooseSearchService.createLookup(
         from,
         localField,
         foreignField,
@@ -654,7 +654,7 @@ export class SearchService {
     }
 
     // Get filter fields (used in filter criteria)
-    const filterFields = SearchService.getFilterFields(query.query)
+    const filterFields = MongooseSearchService.getFilterFields(query.query)
       .filter((field) => field.startsWith(columnPrefix))
       .map((field) => field.substring(columnPrefix.length))
 
@@ -666,7 +666,7 @@ export class SearchService {
 
     if (fields && fields.length > 0) {
       // we got some fields, generate lookup
-      return SearchService.createLookup(
+      return MongooseSearchService.createLookup(
         from,
         localField,
         foreignField,
@@ -709,20 +709,20 @@ export class SearchService {
         : []
 
       // Get filter fields (used in filter criteria)
-      const filterFields = SearchService.getFilterFields(query.query).map(
-        (field) => {
-          if (field.includes(".")) {
-            // First section contains Object name for example 'candidate.email'
-            const [object] = field.split(".")
-            // Check if object is in lookup (aka externalDocument)
-            // and return it, for example 'candidate'
-            if (asColumns.includes(object)) return object
-          }
-          // field dont match criteria for external,
-          // assume its local and return all field
-          return field
-        },
-      )
+      const filterFields = MongooseSearchService.getFilterFields(
+        query.query,
+      ).map((field) => {
+        if (field.includes(".")) {
+          // First section contains Object name for example 'candidate.email'
+          const [object] = field.split(".")
+          // Check if object is in lookup (aka externalDocument)
+          // and return it, for example 'candidate'
+          if (asColumns.includes(object)) return object
+        }
+        // field dont match criteria for external,
+        // assume its local and return all field
+        return field
+      })
 
       fields = fields.concat(references, filterFields)
       const project = fields.reduce((o, field) => ({ ...o, [field]: 1 }), {})
